@@ -11,8 +11,8 @@ import (
 
 // default config if config file not found
 var config = map[string]string{
-	"Name": "JustLike",
-	"Url":  "http://justlike.fun",
+	"Name": "ShareX",
+	"Host": "localhost",
 	"Port": "8080",
 }
 
