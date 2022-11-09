@@ -61,6 +61,8 @@
         /*    background: #2961d9;*/
         /*}*/
     </style>
+    <script src="../static/js/cdn/jquery.min.js"></script>
+
 </head>
 <body>
 
@@ -68,13 +70,13 @@
     <div class="wrap-grid">
         {{ range .Dirs }}
 
-        <div class="box-item">
+        <div class="box-item" onclick="submit(this)">
             <div class="box-item-file">
 
             </div>
 
             <div class="box-item-name">
-                    {{ . }}
+                {{ . }}
             </div>
 
         </div>
@@ -83,5 +85,31 @@
 
 
 </div>
+
+<script>
+
+    function submit(obj){
+        temp = $(obj).find('.box-item-name').text().trim()
+        alert(temp)
+        console.log(temp)
+
+
+        // var arr = {'name':name, 'content':con};
+        // console.log(arr)
+        // $.ajax({
+        //     type: "POST",
+        //     url: "/paste",
+        //     data: arr,
+        //     success: function (data) {
+        //         console.log(data.code)
+        //         if(data.code === 0){
+        //             window.location = "/paste/" + data.data;
+        //         }else{
+        //             alert("提交失败，请重试！")
+        //         }
+        //     },
+        // })
+    }
+</script>
 </body>
 </html>

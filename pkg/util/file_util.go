@@ -8,10 +8,10 @@ func init() {
 	//fmt.Println("util init.")
 }
 
-func GetFiles() []string {
+func GetFiles(dir string) []string {
 	var subFiles []string
 
-	dirs, _ := os.ReadDir(".")
+	dirs, _ := os.ReadDir(dir)
 
 	for _, dir := range dirs {
 		//fmt.Println(dir, dir.IsDir())

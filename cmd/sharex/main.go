@@ -20,6 +20,9 @@ func main() {
 	fmt.Println("conf:", config)
 	r := gin.Default()
 
+	_ = r.SetTrustedProxies(nil)
+	r.Static("/static", "./web/static")
+
 	var htmlFiles []string
 
 	_ = filepath.WalkDir("web/view", func(path string, d fs.DirEntry, err error) error {
@@ -39,13 +42,7 @@ func main() {
 
 	//fmt.Println(data)
 
-	files := util.GetFiles()
-
-	r.GET("/", func(context *gin.Context) {
-		context.HTML(200, "home.html", gin.H{
-			"Dirs": files,
-		})
-	})
+	r.GET("/", HomeController)
 
 	r.GET("/json", func(context *gin.Context) {
 		//context.HTML(200, "home.html")
@@ -57,12 +54,24 @@ func main() {
 	_ = r.Run(fmt.Sprintf(":%s", config["Port"]))
 }
 
+func HomeController(context *gin.Context) {
+	loc, ok := context.GetQuery("loc")
+	if !ok {
+		loc = "."
+	}
+	files := util.GetFiles(loc)
+
+	context.HTML(200, "home.html", gin.H{
+		"Dirs": files,
+	})
+}
+
 func TEST() {
 
 	fmt.Println("---------------------------- TEST ----------------------------")
 	//stooges := []string{"Moe", "Larry", "Curly"} // len(stooges) == 3
 
-	files := util.GetFiles()
+	files := util.GetFiles("../../")
 	fmt.Println(files)
 	fmt.Println("---------------------------- END! ----------------------------")
 }
