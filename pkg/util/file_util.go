@@ -1,12 +1,11 @@
 package util
 
 import (
-	"fmt"
 	"os"
 )
 
-func __Init__() {
-
+func init() {
+	//fmt.Println("util init.")
 }
 
 func GetFiles() []string {
@@ -15,8 +14,8 @@ func GetFiles() []string {
 	dirs, _ := os.ReadDir(".")
 
 	for _, dir := range dirs {
-		fmt.Println(dir, dir.IsDir())
-		subFiles = append(subFiles, dir.Name());
+		//fmt.Println(dir, dir.IsDir())
+		subFiles = append(subFiles, dir.Name())
 	}
 	return subFiles
 }

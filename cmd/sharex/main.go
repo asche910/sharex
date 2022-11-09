@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/asche910/sharex/pkg/conf"
+	"github.com/asche910/sharex/pkg/util"
+	"github.com/gin-gonic/gin"
+
 	"io/fs"
 	"path/filepath"
-	"sharex/src/conf"
-	"sharex/src/util"
 	"strings"
 )
-import "github.com/gin-gonic/gin"
 
 // sharex
 func main() {
@@ -16,7 +17,7 @@ func main() {
 
 	config := conf.InitConfig("sharex.conf")
 
-	fmt.Println(config)
+	fmt.Println("conf:", config)
 	r := gin.Default()
 
 	var htmlFiles []string

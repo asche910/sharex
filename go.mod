@@ -1,4 +1,4 @@
-module sharex
+module github.com/asche910/sharex
 
 go 1.19
 
