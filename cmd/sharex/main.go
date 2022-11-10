@@ -3,10 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/asche910/sharex/pkg/conf"
-	"github.com/asche910/sharex/pkg/util"
+	"github.com/asche910/sharex/pkg/controller"
 	"github.com/gin-gonic/gin"
-	"net/http"
-
 	"io/fs"
 	"path/filepath"
 	"strings"
@@ -43,8 +41,8 @@ func main() {
 
 	//fmt.Println(data)
 
-	r.GET("/", HomeController)
-	r.GET("/download", DownloadController)
+	r.GET("/", controller.HomeController)
+	r.GET("/download", controller.FileController)
 
 	r.GET("/json", func(context *gin.Context) {
 		//context.HTML(200, "home.html")
@@ -56,48 +54,14 @@ func main() {
 	_ = r.Run(fmt.Sprintf(":%s", config["Port"]))
 }
 
-func HomeController(context *gin.Context) {
-	loc, ok := context.GetQuery("loc")
-	if !ok {
-		loc = "."
-	}
-	loc += "/"
-	newDir := filepath.Dir(loc)
-	fmt.Println(loc, " --- ", newDir)
-	if strings.Contains(loc, "..") {
-		context.Status(302)
-		context.Header("Location", "/?loc="+newDir)
-		return
-	}
-
-	files := util.GetShareXFiles(loc)
-	context.HTML(200, "home.html", gin.H{
-		"Files": files,
-	})
-}
-
-func DownloadController(context *gin.Context) {
-	fullName, ok := context.GetQuery("name")
-	if !ok {
-		//loc = "."
-		context.JSON(http.StatusNotFound, nil)
-	}
-
-	idx := strings.LastIndex(fullName, "/")
-	singleName := fullName[idx+1:]
-	fmt.Println("download:", fullName, singleName)
-	context.File(fullName)
-	//context.FileAttachment(fullName, singleName)
-}
-
 func TEST() {
 
 	fmt.Println("---------------------------- TEST ----------------------------")
 
-	_, err := util.GetSnapshot("/Users/as_/Movies/giphy.mp4", "test", 1)
-	if err != nil {
-		return
-	}
+	//_, err := util.GetSnapshot("/Users/as_/Movies/giphy.mp4", "test", 1)
+	//if err != nil {
+	//	return
+	//}
 
 	fmt.Println("---------------------------- END! ----------------------------")
 }
