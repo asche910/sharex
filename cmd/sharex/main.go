@@ -5,6 +5,7 @@ import (
 	"github.com/asche910/sharex/pkg/conf"
 	"github.com/asche910/sharex/pkg/util"
 	"github.com/gin-gonic/gin"
+	"net/http"
 
 	"io/fs"
 	"path/filepath"
@@ -43,6 +44,7 @@ func main() {
 	//fmt.Println(data)
 
 	r.GET("/", HomeController)
+	r.GET("/download", DownloadController)
 
 	r.GET("/json", func(context *gin.Context) {
 		//context.HTML(200, "home.html")
@@ -59,19 +61,43 @@ func HomeController(context *gin.Context) {
 	if !ok {
 		loc = "."
 	}
-	files := util.GetFiles(loc)
+	loc += "/"
+	newDir := filepath.Dir(loc)
+	fmt.Println(loc, " --- ", newDir)
+	if strings.Contains(loc, "..") {
+		context.Status(302)
+		context.Header("Location", "/?loc="+newDir)
+		return
+	}
 
+	files := util.GetShareXFiles(loc)
 	context.HTML(200, "home.html", gin.H{
-		"Dirs": files,
+		"Files": files,
 	})
+}
+
+func DownloadController(context *gin.Context) {
+	fullName, ok := context.GetQuery("name")
+	if !ok {
+		//loc = "."
+		context.JSON(http.StatusNotFound, nil)
+	}
+
+	idx := strings.LastIndex(fullName, "/")
+	singleName := fullName[idx+1:]
+	fmt.Println("download:", fullName, singleName)
+	context.File(fullName)
+	//context.FileAttachment(fullName, singleName)
 }
 
 func TEST() {
 
 	fmt.Println("---------------------------- TEST ----------------------------")
-	//stooges := []string{"Moe", "Larry", "Curly"} // len(stooges) == 3
 
-	files := util.GetFiles("../../")
-	fmt.Println(files)
+	_, err := util.GetSnapshot("/Users/as_/Movies/giphy.mp4", "test", 1)
+	if err != nil {
+		return
+	}
+
 	fmt.Println("---------------------------- END! ----------------------------")
 }

@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <title>ShareX</title>
     <style>
-
-        .wrap-grid{
+        .wrap-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, 80px);
             grid-column-gap: 20px;
@@ -17,7 +16,7 @@
             background: #ffffff;
         }
 
-        .box-item{
+        .box-item {
             display: inline-block;
             width: 80px;
             height: 85px;
@@ -29,14 +28,24 @@
             /*background: #8bcff8;*/
         }
 
-        .box-item:hover{
+        .box-item:hover {
             background-color: #e6e6e6;
         }
 
 
-        .box-item-file{
+        .box-item-file {
             /*display: inline-block;*/
+            width: 70px;
+            height: 60px;
+            margin: 0 auto;
 
+
+            background: #ededec;
+            border-radius: 5px;
+            margin: 0 auto;
+        }
+
+        .box-item-dir{
             width: 70px;
             height: 60px;
             margin: 0 auto;
@@ -45,10 +54,9 @@
             background: #8bcff8;
             border-radius: 5px;
             margin: 0 auto;
-
         }
 
-        .box-item-name{
+        .box-item-name {
             word-break: break-all;
             text-decoration: none;
 
@@ -62,21 +70,29 @@
         /*}*/
     </style>
     <script src="../static/js/cdn/jquery.min.js"></script>
+    <script src="../static/js/common/common.js"></script>
 
 </head>
 <body>
 
 <div>
     <div class="wrap-grid">
-        {{ range .Dirs }}
+        {{ range .Files }}
 
-        <div class="box-item" onclick="submit(this)">
-            <div class="box-item-file">
+        <div class="box-item  {{ if .IsFile }} file {{ end }}" onclick="jump(this)">
+            {{ if .IsFile }}
+            <div class="box-item-file ">
 
             </div>
 
+            {{ else }}
+            <div class="box-item-dir ">
+
+            </div>
+            {{ end }}
+
             <div class="box-item-name">
-                {{ . }}
+                {{ .Name }}
             </div>
 
         </div>
@@ -88,10 +104,37 @@
 
 <script>
 
-    function submit(obj){
-        temp = $(obj).find('.box-item-name').text().trim()
-        alert(temp)
-        console.log(temp)
+
+    let CUR_LOC = getUrlParameter('loc');
+    if (!CUR_LOC){
+        CUR_LOC = '.';
+    }
+    if (!CUR_LOC.endsWith("/")) {
+        CUR_LOC += '/';
+    }
+    console.log('loc:', CUR_LOC)
+
+
+    function jump(obj) {
+        var ele = $(obj);
+        let isFile = ele.hasClass("file");
+        console.log(isFile)
+
+
+        temp = ele.find('.box-item-name').text().trim()
+        if (temp === '.'){
+            return
+        }
+
+        let newFile = CUR_LOC + temp;
+        console.log(newFile)
+
+        if (isFile){
+            window.location.href = "/download?name=" + newFile;
+        }else{
+            window.location.href = "/?loc=" + newFile;
+        }
+
 
 
         // var arr = {'name':name, 'content':con};
