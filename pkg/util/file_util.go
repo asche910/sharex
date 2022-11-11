@@ -48,7 +48,7 @@ func GetFiles(dir string) []string {
 func GetShareXFiles(dirStr string) []sharex.ShareXFile {
 	var retFiles = []sharex.ShareXFile{
 		//{IsFile: false, Name: "."},
-		//{IsFile: false, Name: "..", PreURL: "../static/image/test-large.png"},
+		{IsFile: false, Name: "..", PreURL: "../static/image/test-large.png"},
 	}
 
 	dirs, _ := os.ReadDir(dirStr)
