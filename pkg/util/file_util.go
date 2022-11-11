@@ -101,7 +101,9 @@ func GetFileContentType(out *os.File) (string, error) {
 }
 
 func Path2UniqueName(path string) string {
-	return strings.ReplaceAll(path, "/", "_")
+	path = strings.ReplaceAll(path, "/", "_")
+	path = strings.ReplaceAll(path, "\\", "_")
+	return path
 }
 
 func CheckVideoType(name string) bool {
