@@ -43,6 +43,7 @@ func main() {
 
 	r.GET("/", controller.HomeController)
 	r.GET("/download", controller.FileController)
+	r.GET("/img/:name", controller.DownloadController)
 
 	r.GET("/json", func(context *gin.Context) {
 		//context.HTML(200, "home.html")
@@ -58,10 +59,7 @@ func TEST() {
 
 	fmt.Println("---------------------------- TEST ----------------------------")
 
-	//_, err := util.GetSnapshot("/Users/as_/Movies/giphy.mp4", "test", 1)
-	//if err != nil {
-	//	return
-	//}
+	//fmt.Println(util.CheckFileExists("/Users/as_/Movies/giphy.mp4"))
 
 	fmt.Println("---------------------------- END! ----------------------------")
 }

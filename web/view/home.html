@@ -43,9 +43,12 @@
             background: #ededec;
             border-radius: 5px;
             margin: 0 auto;
+
+            -moz-background-size: 100% 100%;
+            background-size: 100% 100%;
         }
 
-        .box-item-dir{
+        .box-item-dir {
             width: 70px;
             height: 60px;
             margin: 0 auto;
@@ -54,6 +57,9 @@
             background: #8bcff8;
             border-radius: 5px;
             margin: 0 auto;
+
+            -moz-background-size: 100% 100%;
+            background-size: 100% 100%;
         }
 
         .box-item-name {
@@ -64,6 +70,7 @@
 
             text-align: center;
         }
+
 
         /*.box-item-name:hover{*/
         /*    background: #2961d9;*/
@@ -81,12 +88,12 @@
 
         <div class="box-item  {{ if .IsFile }} file {{ end }}" onclick="jump(this)">
             {{ if .IsFile }}
-            <div class="box-item-file ">
+            <div class="box-item-file " {{ if .PreURL }} pre-bg="{{ .PreURL }}" {{ end }} >
 
             </div>
 
             {{ else }}
-            <div class="box-item-dir ">
+            <div class="box-item-dir " {{ if .PreURL }} pre-bg="{{ .PreURL }}" {{ end }} >
 
             </div>
             {{ end }}
@@ -106,7 +113,7 @@
 
 
     let CUR_LOC = getUrlParameter('loc');
-    if (!CUR_LOC){
+    if (!CUR_LOC) {
         CUR_LOC = '.';
     }
     if (!CUR_LOC.endsWith("/")) {
@@ -122,19 +129,18 @@
 
 
         temp = ele.find('.box-item-name').text().trim()
-        if (temp === '.'){
+        if (temp === '.') {
             return
         }
 
         let newFile = CUR_LOC + temp;
         console.log(newFile)
 
-        if (isFile){
+        if (isFile) {
             window.location.href = "/download?name=" + newFile;
-        }else{
+        } else {
             window.location.href = "/?loc=" + newFile;
         }
-
 
 
         // var arr = {'name':name, 'content':con};
@@ -153,6 +159,16 @@
         //     },
         // })
     }
+
+    $(document).ready(function () {
+        var eles = $('div[pre-bg]')
+        for (let i = 0; i < eles.length; i++) {
+            var ele = $(eles[i])
+            console.log(eles[i]);
+            var bgUrl = eles[i].getAttribute('pre-bg');
+            ele.css('background-image', 'url(' + bgUrl + ')')
+        }
+    });
 </script>
 </body>
 </html>

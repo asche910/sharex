@@ -5,4 +5,5 @@ type ShareXFile struct {
 	Name   string
 	Size   int64
 	Type   string
+	PreURL string
 }
