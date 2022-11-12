@@ -6,12 +6,14 @@ import (
 	"net/http"
 	"os"
 	"os/user"
+	"strconv"
 	"strings"
 
 	"golang.org/x/exp/slices"
 )
 
-var VIDEO_TYPE_LIST = []string{"mp4", "avi", "mov", "wmv", "flv"}
+var VIDEO_TYPE_LIST = []string{"mp4", "avi", "mov", "wmv", "flv", "mkv"}
+var PICTURE_TYPE_LIST = []string{"jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"}
 
 var UserHome string
 var CacheDir string
@@ -60,25 +62,18 @@ func GetShareXFiles(dirStr string) []sharex.ShareXFile {
 			Name:   dir.Name(),
 		}
 
-		// is File not dir
+		// if is File not dir
 		if !dir.IsDir() {
 			info, _ := dir.Info()
-
-			//fmt.Println(info.Mode())
 			cur.Size = info.Size()
 
-			// todo load preview
-			//fullPath := dirStr + "/" + dir.Name()
-
 			fullPath := dirStr + "/" + dir.Name()
-			fmt.Println(fullPath)
-			if CheckVideoType(fullPath) {
-				view, ok := GetVideoPreView(fullPath)
-				if ok {
-					cur.PreURL = "/img/" + view
-				}
-			}
 
+			//fmt.Println(fullPath)
+			view, ok := GetPreview(fullPath)
+			if ok {
+				cur.PreURL = "/img/" + view
+			}
 		}
 		fmt.Println(cur)
 		retFiles = append(retFiles, cur)
@@ -101,9 +96,10 @@ func GetFileContentType(out *os.File) (string, error) {
 }
 
 func Path2UniqueName(path string) string {
-	path = strings.ReplaceAll(path, "/", "_")
-	path = strings.ReplaceAll(path, "\\", "_")
-	return path
+	//path = strings.ReplaceAll(path, "/", "_")
+	//path = strings.ReplaceAll(path, "\\", "_")
+	hashUint := Hash(path)
+	return strconv.FormatUint(uint64(hashUint), 10)
 }
 
 func CheckVideoType(name string) bool {
@@ -115,6 +111,17 @@ func CheckVideoType(name string) bool {
 
 	isVideo := slices.Contains(VIDEO_TYPE_LIST, fileType)
 	return isVideo
+}
+
+func CheckPictureType(name string) bool {
+	idx := strings.LastIndex(name, ".")
+	if idx == -1 {
+		return false
+	}
+	fileType := strings.ToLower(name[idx+1:])
+
+	isPic := slices.Contains(PICTURE_TYPE_LIST, fileType)
+	return isPic
 }
 
 func CheckFileExists(name string) bool {

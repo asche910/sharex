@@ -61,5 +61,6 @@ func TEST() {
 
 	//fmt.Println(util.CheckFileExists("/Users/as_/Movies/giphy.mp4"))
 
+	//util.GetPictureSnapshot("/Users/as_/go/sharex/web/static/image/test-large.png", "/Users/as_/go/sharex/web/static/image/test.png")
 	fmt.Println("---------------------------- END! ----------------------------")
 }

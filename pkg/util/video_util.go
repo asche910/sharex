@@ -13,7 +13,7 @@ import (
 func GetPictureOfVideo() {
 
 }
-func GetSnapshot(videoPath, snapshotPath string, frameNum int) (snapshotName string, err error) {
+func GetVideoSnapshot(videoPath, snapshotPath string, frameNum int) (snapshotName string, err error) {
 	buf := bytes.NewBuffer(nil)
 	err = ffmpeg.Input(videoPath).
 		Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frameNum)}).
@@ -21,19 +21,19 @@ func GetSnapshot(videoPath, snapshotPath string, frameNum int) (snapshotName str
 		WithOutput(buf, os.Stdout).
 		Run()
 	if err != nil {
-		log.Fatal("生成缩略图失败：", err)
+		log.Println("生成缩略图失败：", err)
 		return "", err
 	}
 
 	img, err := imaging.Decode(buf)
 	if err != nil {
-		log.Fatal("生成缩略图失败：", err)
+		log.Println("生成缩略图失败：", err)
 		return "", err
 	}
 
 	err = imaging.Save(img, snapshotPath+".png")
 	if err != nil {
-		log.Fatal("生成缩略图失败：", err)
+		log.Println("生成缩略图失败：", err)
 		return "", err
 	}
 
