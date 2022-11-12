@@ -2,6 +2,7 @@ package conf
 
 import (
 	"bufio"
+	"fmt"
 	"gorm.io/gorm"
 	"io"
 	"log"
@@ -25,7 +26,8 @@ func InitConfig(path string) map[string]string {
 	f, err := os.Open(path)
 	defer f.Close()
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return config
 	}
 
 	r := bufio.NewReader(f)
