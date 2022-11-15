@@ -15,6 +15,7 @@ func GetPictureOfVideo() {
 }
 func GetVideoSnapshot(videoPath, snapshotPath string, frameNum int) (snapshotName string, err error) {
 	buf := bytes.NewBuffer(nil)
+	// ffmpeg -ss mm:ss -i video.mp4 -frames:v 1 -s 128x128 -f image2 image.png
 	err = ffmpeg.Input(videoPath).
 		Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frameNum)}).
 		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
