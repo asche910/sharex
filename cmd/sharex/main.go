@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/asche910/sharex/pkg/conf"
 	"github.com/asche910/sharex/pkg/controller"
-	"github.com/asche910/sharex/pkg/util"
 	"github.com/gin-gonic/gin"
 	"io/fs"
 	"path/filepath"
@@ -94,6 +93,6 @@ func TEST() {
 
 	//util.RunFfmpegWithArgs("-ss", "1", "-i", "/Users/as_/test.mp4", "-vframes", "1", "-f", "image2", "test.jpg")
 
-	util.GetFirstFrame("/Users/as_/test.mp4", "test.jpg")
+	//util.GetFirstFrame("/Users/as_/test.mp4", "test.jpg")
 	fmt.Println("---------------------------- END! ----------------------------")
 }
