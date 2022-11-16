@@ -7,9 +7,8 @@ import (
 )
 
 // GetPreview
-//
-//		input -> fullPath
-//	 output -> filename of CACHE_DIR, if ok
+// input -> fullPath
+// output -> filename of CACHE_DIR, if ok
 func GetPreview(name string) (string, bool) {
 	dotIdx := strings.LastIndex(name, ".")
 	if dotIdx == -1 {
@@ -34,15 +33,7 @@ func getVideoPreview(name string) (string, bool) {
 	if CheckFileExists(newFullName) {
 		return uniqueName, true
 	} else {
-		//dotIdx := strings.LastIndex(uniqueName, ".")
-		//nameNoTail := uniqueName[:dotIdx]
-
 		GetMiddleFrame(name, newFullName)
-		//_, err := GetVideoSnapshot(name, CacheDir+nameNoTail, 1)
-		//if err != nil {
-		//	fmt.Println("gen pre failed", name, err)
-		//	return "", false
-		//}
 		return uniqueName, true
 	}
 }

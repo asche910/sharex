@@ -1,44 +1,43 @@
 package util
 
 import (
-	"bytes"
 	"fmt"
-	"github.com/disintegration/imaging"
-	ffmpeg "github.com/u2takey/ffmpeg-go"
-	"log"
-	"os"
 	"strings"
 )
 
-func GetPictureOfVideo() {
-
+// GetFirstFrame
+// note: output file should be .jpg
+func GetFirstFrame(input, output string) {
+	RunFfmpegWithArgs("-ss", "1", "-i", input, "-vframes", "1", "-f", "image2", output)
 }
-func GetVideoSnapshot(videoPath, snapshotPath string, frameNum int) (snapshotName string, err error) {
-	buf := bytes.NewBuffer(nil)
-	// ffmpeg -ss mm:ss -i video.mp4 -frames:v 1 -s 128x128 -f image2 image.png
-	err = ffmpeg.Input(videoPath).
-		Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frameNum)}).
-		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
-		WithOutput(buf, os.Stdout).
-		Run()
-	if err != nil {
-		log.Println("生成缩略图失败：", err)
-		return "", err
-	}
 
-	img, err := imaging.Decode(buf)
-	if err != nil {
-		log.Println("生成缩略图失败：", err)
-		return "", err
+// GetMiddleFrame
+// note: output file should be .jpg
+// if failed, using GetFirstFrame
+func GetMiddleFrame(input, output string) {
+	videoLength, ok := GetVideoLength(input)
+	if ok {
+		midLen, ok := GetMiddleTime(videoLength)
+		if ok {
+			RunFfmpegWithArgs("-ss", midLen, "-i", input, "-vframes", "1", "-f", "image2", output)
+			return
+		}
 	}
+	RunFfmpegWithArgs("-ss", "1", "-i", input, "-vframes", "1", "-f", "image2", output)
+}
 
-	err = imaging.Save(img, snapshotPath+".png")
-	if err != nil {
-		log.Println("生成缩略图失败：", err)
-		return "", err
+// GetVideoLength
+// example time: HH:mm:ss:-- 00:00:09:89
+func GetVideoLength(input string) (string, bool) {
+	resp, ok := RunFFprobeWithArgs(input)
+	if !ok {
+		return "", false
 	}
-
-	names := strings.Split(snapshotPath, "\\")
-	snapshotName = names[len(names)-1] + ".png"
-	return
+	idx := strings.Index(resp, "Duration:")
+	if idx < 0 {
+		return "", false
+	}
+	timeLen := resp[idx+10 : idx+21]
+	fmt.Println(timeLen)
+	return timeLen, true
 }

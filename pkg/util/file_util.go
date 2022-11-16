@@ -20,8 +20,6 @@ var UserHome string
 var CacheDir string
 
 func init() {
-	//fmt.Println("util init.")
-
 	u, err := user.Current()
 	if err != nil {
 		fmt.Println("get user home err", err)
@@ -79,9 +77,6 @@ func GetShareXFiles(dirStr string) []sharex.ShareXFile {
 				cur.PreURL = "/img/" + dir.Name()
 			} else {
 				fullPath := filepath.Join(dirStr, dir.Name())
-				//fullPath := dirStr + "/" + dir.Name()
-
-				//fmt.Println(fullPath)
 				view, ok := GetPreview(fullPath)
 				if ok {
 					cur.PreURL = "/img/" + view
@@ -109,13 +104,11 @@ func GetFileContentType(out *os.File) (string, error) {
 }
 
 func Path2UniqueName(path string) string {
-	//path = strings.ReplaceAll(path, "/", "_")
-	//path = strings.ReplaceAll(path, "\\", "_")
 	hashUint := Hash(path)
 	return strconv.FormatUint(uint64(hashUint), 10)
 }
 
-func CheckVideoType(name string) bool {
+func CheckIsVideo(name string) bool {
 	idx := strings.LastIndex(name, ".")
 	if idx == -1 {
 		return false
@@ -126,7 +119,7 @@ func CheckVideoType(name string) bool {
 	return isVideo
 }
 
-func CheckPictureType(name string) bool {
+func CheckIsPicture(name string) bool {
 	idx := strings.LastIndex(name, ".")
 	if idx == -1 {
 		return false
@@ -144,5 +137,4 @@ func CheckFileExists(name string) bool {
 		return false
 	}
 	return true
-	//return !errors.Is(err, os.ErrNotExist)
 }
