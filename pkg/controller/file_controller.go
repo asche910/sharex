@@ -45,6 +45,6 @@ func FileController(context *gin.Context) {
 
 func DownloadController(context *gin.Context) {
 	fileName := context.Param("name")
-	fullPath := util.CacheDir + fileName
+	fullPath := filepath.Join(util.CacheDir, fileName)
 	context.File(fullPath)
 }

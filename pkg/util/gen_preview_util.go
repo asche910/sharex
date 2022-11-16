@@ -2,6 +2,7 @@ package util
 
 import (
 	"golang.org/x/exp/slices"
+	"path/filepath"
 	"strings"
 )
 
@@ -29,13 +30,14 @@ func getVideoPreview(name string) (string, bool) {
 	uniqueName := Path2UniqueName(name[:dotIdx])
 	uniqueName = "img_" + uniqueName + ".jpg"
 
-	if CheckFileExists(CacheDir + uniqueName) {
+	newFullName := filepath.Join(CacheDir, uniqueName)
+	if CheckFileExists(newFullName) {
 		return uniqueName, true
 	} else {
 		//dotIdx := strings.LastIndex(uniqueName, ".")
 		//nameNoTail := uniqueName[:dotIdx]
 
-		GetFirstFrame(name, CacheDir+uniqueName)
+		GetMiddleFrame(name, newFullName)
 		//_, err := GetVideoSnapshot(name, CacheDir+nameNoTail, 1)
 		//if err != nil {
 		//	fmt.Println("gen pre failed", name, err)
@@ -50,7 +52,7 @@ func getPicturePreview(name string) (string, bool) {
 
 	uniqueName := Path2UniqueName(name[:dotIdx])
 	uniqueName = "img_" + uniqueName + ".png"
-	ok := GetPictureSnapshot(name, CacheDir+uniqueName)
+	ok := GetPictureSnapshot(name, filepath.Join(CacheDir, uniqueName))
 	if !ok {
 		return "", false
 	}

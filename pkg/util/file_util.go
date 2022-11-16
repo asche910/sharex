@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/user"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -28,7 +29,7 @@ func init() {
 	UserHome = u.HomeDir
 	fmt.Println("user home", UserHome)
 
-	CacheDir = UserHome + "/.sharex/"
+	CacheDir = fmt.Sprintf("%s%c.sharex", UserHome, os.PathSeparator)
 	os.Mkdir(CacheDir, 0777)
 }
 
@@ -53,6 +54,13 @@ func GetShareXFiles(dirStr string) []sharex.ShareXFile {
 		{IsFile: false, Name: "..", PreURL: "../static/image/test-large.png"},
 	}
 
+	isCacheDir := false
+	absDir, _ := filepath.Abs(dirStr)
+	if strings.Compare(absDir, CacheDir) == 0 {
+		fmt.Println("visit cache dir!")
+		isCacheDir = true
+	}
+
 	dirs, _ := os.ReadDir(dirStr)
 
 	for _, dir := range dirs {
@@ -67,12 +75,17 @@ func GetShareXFiles(dirStr string) []sharex.ShareXFile {
 			info, _ := dir.Info()
 			cur.Size = info.Size()
 
-			fullPath := dirStr + "/" + dir.Name()
+			if isCacheDir {
+				cur.PreURL = "/img/" + dir.Name()
+			} else {
+				fullPath := filepath.Join(dirStr, dir.Name())
+				//fullPath := dirStr + "/" + dir.Name()
 
-			//fmt.Println(fullPath)
-			view, ok := GetPreview(fullPath)
-			if ok {
-				cur.PreURL = "/img/" + view
+				//fmt.Println(fullPath)
+				view, ok := GetPreview(fullPath)
+				if ok {
+					cur.PreURL = "/img/" + view
+				}
 			}
 		}
 		fmt.Println(cur)
