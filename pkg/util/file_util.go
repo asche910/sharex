@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	sharex "github.com/asche910/sharex/pkg"
+	"log"
 	"net/http"
 	"os"
 	"os/user"
@@ -15,6 +16,8 @@ import (
 
 var VIDEO_TYPE_LIST = []string{"mp4", "avi", "mov", "wmv", "flv", "mkv"}
 var PICTURE_TYPE_LIST = []string{"jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"}
+
+var previewCacheMap = make(map[string]string)
 
 var UserHome string
 var CacheDir string
@@ -77,13 +80,21 @@ func GetShareXFiles(dirStr string) []sharex.ShareXFile {
 				cur.PreURL = "/img/" + dir.Name()
 			} else {
 				fullPath := filepath.Join(dirStr, dir.Name())
-				view, ok := GetPreview(fullPath)
+
+				val, ok := previewCacheMap[fullPath]
 				if ok {
-					cur.PreURL = "/img/" + view
+					cur.PreURL = val
+				} else {
+					view, ok := GetPreview(fullPath)
+					if ok {
+						cur.PreURL = "/img/" + view
+						previewCacheMap[fullPath] = cur.PreURL
+					}
 				}
 			}
 		}
-		fmt.Println(cur)
+		log.Println(cur)
+		//fmt.Println(cur)
 		retFiles = append(retFiles, cur)
 	}
 	return retFiles
@@ -132,8 +143,8 @@ func CheckIsPicture(name string) bool {
 
 func CheckFileExists(name string) bool {
 	_, err := os.Stat(name)
-	fmt.Println(err)
 	if err != nil && os.IsNotExist(err) {
+		log.Println("CheckFileExists err", err)
 		return false
 	}
 	return true

@@ -43,9 +43,14 @@ func getPicturePreview(name string) (string, bool) {
 
 	uniqueName := Path2UniqueName(name[:dotIdx])
 	uniqueName = "img_" + uniqueName + ".png"
-	ok := GetPictureSnapshot(name, filepath.Join(CacheDir, uniqueName))
-	if !ok {
-		return "", false
+	newFullName := filepath.Join(CacheDir, uniqueName)
+	if CheckFileExists(newFullName) {
+		return uniqueName, true
+	} else {
+		ok := GetPictureSnapshot(name, newFullName)
+		if !ok {
+			return "", false
+		}
+		return uniqueName, true
 	}
-	return uniqueName, true
 }
