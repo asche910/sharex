@@ -51,7 +51,7 @@
 
         }
 
-        .box-item-file-img{
+        .box-item-file-img {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -80,6 +80,14 @@
             text-align: center;
         }
 
+        .text-2 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* number of lines to show */
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
 
         /*.box-item-name:hover{*/
         /*    background: #2961d9;*/
@@ -97,17 +105,17 @@
 
         <div class="box-item  {{ if .IsFile }} file {{ end }}" onclick="jump(this)">
             {{ if .IsFile }}
-            <div class="box-item-file " {{ if .PreURL }} pre-bg="{{ .PreURL }}" {{ end }} >
+            <div class="box-item-file " {{ if .PreURL }} pre-bg="{{ .PreURL }}" {{ end }}>
                 <img class="box-item-file-img" alt="hhh" src="" hidden>
             </div>
 
             {{ else }}
-            <div class="box-item-dir " {{ if .PreURL }} pre-bg="{{ .PreURL }}" {{ end }} >
+            <div class="box-item-dir " {{ if .PreURL }} pre-bg="{{ .PreURL }}" {{ end }}>
 
             </div>
             {{ end }}
 
-            <div class="box-item-name">
+            <div class="box-item-name text-2">
                 {{ .Name }}
             </div>
 
