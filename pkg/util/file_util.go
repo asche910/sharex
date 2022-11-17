@@ -93,8 +93,7 @@ func GetShareXFiles(dirStr string) []sharex.ShareXFile {
 				}
 			}
 		}
-		log.Println(cur)
-		//fmt.Println(cur)
+		//log.Println(cur)
 		retFiles = append(retFiles, cur)
 	}
 	return retFiles

@@ -34,19 +34,27 @@
 
 
         .box-item-file {
-            /*display: inline-block;*/
-            width: 70px;
-            height: 60px;
+            width: 100%;
+            height: 100%;
+            max-width: 70px;
+            max-height: 60px;
             margin: 0 auto;
-
 
             background-color: #ededec;
             border-radius: 5px;
             margin: 0 auto;
 
             /*-moz-background-size: 100% 100%;*/
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
+            /*background-size: 100% 100%;*/
+            /*background-repeat: no-repeat;*/
+            /*object-fit: contain;*/
+
+        }
+
+        .box-item-file-img{
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .box-item-dir {
@@ -90,7 +98,7 @@
         <div class="box-item  {{ if .IsFile }} file {{ end }}" onclick="jump(this)">
             {{ if .IsFile }}
             <div class="box-item-file " {{ if .PreURL }} pre-bg="{{ .PreURL }}" {{ end }} >
-
+                <img class="box-item-file-img" alt="hhh" src="" hidden>
             </div>
 
             {{ else }}
@@ -166,8 +174,14 @@
         for (let i = 0; i < eles.length; i++) {
             var ele = $(eles[i])
             console.log(eles[i]);
+            ele.css({'background-color': 'inherit '})
+
             var bgUrl = eles[i].getAttribute('pre-bg');
-            ele.css('background-image', 'url(' + bgUrl + ')')
+            // ele.css('background-image', 'url(' + bgUrl + ')')
+            // ele.find(".box-item-file-img").css('background-image', 'url(' + bgUrl + ')')
+            var imgEle = ele.find(".box-item-file-img")
+            imgEle.attr('src', bgUrl);
+            imgEle.removeAttr('hidden');
         }
     });
 </script>
