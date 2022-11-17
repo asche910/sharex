@@ -150,23 +150,6 @@
         } else {
             window.location.href = "/?loc=" + newFile;
         }
-
-
-        // var arr = {'name':name, 'content':con};
-        // console.log(arr)
-        // $.ajax({
-        //     type: "POST",
-        //     url: "/paste",
-        //     data: arr,
-        //     success: function (data) {
-        //         console.log(data.code)
-        //         if(data.code === 0){
-        //             window.location = "/paste/" + data.data;
-        //         }else{
-        //             alert("提交失败，请重试！")
-        //         }
-        //     },
-        // })
     }
 
     $(document).ready(function () {
@@ -174,7 +157,7 @@
         for (let i = 0; i < eles.length; i++) {
             var ele = $(eles[i])
             console.log(eles[i]);
-            ele.css({'background-color': 'inherit '})
+            ele.css({'background-color': 'inherit'})
 
             var bgUrl = eles[i].getAttribute('pre-bg');
             // ele.css('background-image', 'url(' + bgUrl + ')')
